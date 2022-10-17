@@ -1,13 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Diagnostics;
-using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using static FullscreenLock.Checker;
 
@@ -33,7 +26,7 @@ namespace FullscreenLock
 
         private void button1_Click(object sender, EventArgs e)
         {
-           c.toggle(this.button1,this.label1);
+            c.toggle(this.button1, this.label1);
         }
         public void labelset(string s)
         {
@@ -117,7 +110,7 @@ namespace FullscreenLock
             if (dialog == DialogResult.OK)
             {
                 c.SaveSettings();
-            } 
+            }
         }
 
         private void selectExeButton_Click(object sender, EventArgs e)
@@ -253,9 +246,9 @@ namespace FullscreenLock
                         c.appOffsets[selected.ProcessName].H = h.Value;
                     }
 
-                    if ((x != 0 && x != null) || 
-                        (y != 0 && y != null) || 
-                        (w != 0 && w != null) || 
+                    if ((x != 0 && x != null) ||
+                        (y != 0 && y != null) ||
+                        (w != 0 && w != null) ||
                         (h != 0 && h != null))
                     {
                         c.SaveAppSettings();
@@ -300,7 +293,7 @@ namespace FullscreenLock
 
         private void xInput_TextChanged(object sender, EventArgs e)
         {
-            ChangeOffset(x : GetIntInputValue((TextBox)sender));
+            ChangeOffset(x: GetIntInputValue((TextBox)sender));
         }
 
         private void yInput_TextChanged(object sender, EventArgs e)

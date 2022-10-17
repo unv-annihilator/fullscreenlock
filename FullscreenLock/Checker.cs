@@ -1,19 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Windows.Forms;
-using System.Windows;
-using System.Drawing;
-using System.Diagnostics;
-using System.Collections.Generic;
-using System.Linq;
-using System.IO;
-using System.Reflection;
-using System.Threading;
-using System.Windows.Threading;
 using System.Threading.Tasks;
 using System.Timers;
+using System.Windows.Forms;
 using System.Windows.Input;
+using System.Windows.Threading;
 
 namespace FullscreenLock
 {
@@ -122,7 +120,7 @@ namespace FullscreenLock
         ListBox procBox;
         ListBox selectedBox;
         NotifyIcon notifyIcon;
-        List<ProcessModel> savedSelectedApps = new List<ProcessModel>(); 
+        List<ProcessModel> savedSelectedApps = new List<ProcessModel>();
         List<ProcessModel> runningApps = new List<ProcessModel>();
 
         object cObj = new object();
@@ -169,7 +167,8 @@ namespace FullscreenLock
                 f.ShowInTaskbar = true;
             }
 
-            Task.Factory.StartNew(() => {
+            Task.Factory.StartNew(() =>
+            {
                 ReadSelectedApps();
                 ReadRunningApps();
 
@@ -226,7 +225,7 @@ namespace FullscreenLock
                             selectedBox.Items.Add(selected);
                         }
                         this.savedSelectedApps.Add(selected);
-                    
+
                         if (selected.CreatedFromExe)
                         {
                             this.runningApps.Remove(selected);
@@ -239,11 +238,11 @@ namespace FullscreenLock
             }
             LoadProcesses();
         }
-        
+
         public void delSelected()
         {
             lock (lockObj)
-            { 
+            {
                 if (procBox.SelectedIndex != -1)
                 {
                     var selected = (ProcessModel)procBox.SelectedItem;
@@ -295,7 +294,7 @@ namespace FullscreenLock
             {
                 lock (lockObj)
                 {
-                    var selected = new ProcessModel 
+                    var selected = new ProcessModel
                     {
                         ProcessName = exeFileName,
                         ProcessTitle = exeFileName,
@@ -327,6 +326,7 @@ namespace FullscreenLock
                 ShiftOverrideEnabled = iniFile.Read("ShiftOverride") == "true";
             }
         }
+
         public void SaveSettings()
         {
             lock (iniObj)
@@ -384,10 +384,10 @@ namespace FullscreenLock
             lock (iniObj)
             {
                 runningApps = new List<ProcessModel>();
-                var iniFile = new IniFile(); 
+                var iniFile = new IniFile();
                 var procs = iniFile.Read("RunningProcesses");
                 if (!string.IsNullOrWhiteSpace(procs))
-                { 
+                {
                     var savedProcs = procs.Split(',').ToArray();
                     foreach (var savedProc in savedProcs)
                     {
@@ -399,7 +399,7 @@ namespace FullscreenLock
                             ProcessTitle = split.Length > 1 ? split[1] : savedProc,
                             CreatedFromExe = split.Length > 2 ? split[2] == "Y" : false
                         };
-                        
+
                         if (!savedSelectedApps.Any(x => x.ProcessName == proc.ProcessName || x.ProcessTitle == proc.ProcessTitle))
                         {
                             runningApps.Add(proc);
@@ -433,8 +433,8 @@ namespace FullscreenLock
                 {
                     var savedApps = procs.Split(',').ToArray();
 
-                    foreach (var savedApp in savedApps) 
-                    { 
+                    foreach (var savedApp in savedApps)
+                    {
                         var split = savedApp.Split(';').ToArray();
 
                         string app = split.Length > 0 ? split[0] : null;
@@ -469,7 +469,7 @@ namespace FullscreenLock
                                 W = w,
                                 H = h
                             };
-                            
+
                             if (!appOffsets.ContainsKey(app))
                             {
                                 appOffsets.Add(app, offsets);
@@ -485,7 +485,7 @@ namespace FullscreenLock
         }
 
         public void SaveAppSettings()
-        { 
+        {
             lock (iniObj)
             {
                 var iniFile = new IniFile();
@@ -520,7 +520,7 @@ namespace FullscreenLock
                 foreach (ProcessModel proc in this.savedSelectedApps)
                 {
                     if (strBuilder.Length != 0) strBuilder.Append(",");
-                    strBuilder.Append(proc.ProcessName + ";" + proc.ProcessTitle + (proc.CreatedFromExe ? ";Y":""));
+                    strBuilder.Append(proc.ProcessName + ";" + proc.ProcessTitle + (proc.CreatedFromExe ? ";Y" : ""));
                 }
                 iniFile.Write("SelectedProcesses", strBuilder.ToString());
             }
@@ -528,7 +528,7 @@ namespace FullscreenLock
         private void SaveRunningApps()
         {
             lock (iniObj)
-            { 
+            {
                 var iniFile = new IniFile();
                 var strBuilder = new StringBuilder();
                 foreach (ProcessModel proc in this.runningApps)
@@ -683,15 +683,15 @@ namespace FullscreenLock
         public static bool IsForegroundFullScreen(Checker c)
         {
             //Get the handles for the desktop and shell now.
-            IntPtr desktopHandle; 
-            IntPtr shellHandle; 
+            IntPtr desktopHandle;
+            IntPtr shellHandle;
             desktopHandle = GetDesktopWindow();
             shellHandle = GetShellWindow();
             RECT appBounds;
             Rectangle screenBounds;
             IntPtr hWnd;
 
-            if (Keyboard.IsKeyDown(Key.LeftShift))
+            if (c.ShiftOverrideEnabled && Keyboard.IsKeyDown(Key.LeftShift))
             {
                 System.Windows.Forms.Cursor.Clip = Rectangle.Empty;
                 c.shiftInterception = true;
@@ -752,14 +752,14 @@ namespace FullscreenLock
                         System.Windows.Forms.Cursor.Clip = Rectangle.Empty;
                         return false;
                     }
-                }   
-             }
+                }
+            }
             else
             {
                 System.Windows.Forms.Cursor.Clip = Rectangle.Empty;
             }
-             return false;
-         }
+            return false;
+        }
     }
 }
 
