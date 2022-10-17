@@ -1,4 +1,7 @@
 # FullscreenLock
+
+Original Code/Upstream Repository: https://github.com/torradmin/fullscreenlock
+
 Provide fullscreen mouse boundaries for games that don't.
 
 Improved version by me. Pressing shift allows to temporarily get away from apps. alt+tab also works.
