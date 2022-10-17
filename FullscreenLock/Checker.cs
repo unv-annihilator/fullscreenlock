@@ -150,7 +150,8 @@ namespace FullscreenLock
             LoadSettings();
             LoadAppSettings();
 
-            notifyIcon.Icon = SystemIcons.Application;
+            // notifyIcon.Icon = SystemIcons.Application;
+            notifyIcon.Icon = Properties.Resources.gaben;
 
             if (StartMinimized)
             {
